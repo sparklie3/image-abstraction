@@ -1,0 +1,14 @@
+{
+  "name": "image-abstration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "shaw",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
