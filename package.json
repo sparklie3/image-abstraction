@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "node index.js"
   },
   "author": "shaw",
   "license": "ISC",
@@ -14,3 +14,4 @@
     "request": "^2.79.0"
   }
 }
+
