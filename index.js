@@ -70,7 +70,7 @@ app.get('/latest', function(req, res) {
 });
 
 
-function getPhotoInfo(photoIdVal, secretVal, callback){
+function getPhotoInfo(photoIdVal, secretVal, url1, url2, callback){
     return new Promise(function(resolve, reject){
         var method = "flickr.photos.getInfo&";
         var flickrPhotoId = "photo_id=";
@@ -82,7 +82,7 @@ function getPhotoInfo(photoIdVal, secretVal, callback){
             if (!error && response.statusCode == 200) {
                 var photoData = JSON.parse(data);
                 //console.log(data);
-                resolve(callback(photoData));
+                resolve(callback(photoData, url1, url2));
             }else{
               reject(console.log(error));
           }
@@ -123,33 +123,34 @@ app.get('/imagesearch',function(req,res, next){
                 var description="No Description";
                 var photo = data.photos.photo[i];
                 var id = photo.id;
+                console.log("outside: "+id);
                 var secret = photo.secret;
                 var farmId = photo.farm;
                 var serverId = photo.server;
                 var photoUrl = "".concat("https://farm",farmId,".staticflickr.com/",serverId,"/",id,"_",secret,".jpg");
                 var photoUrlThumbNail = photoUrl.substring(0,photoUrl.length-4).concat("_t",".jpg");
-                getPhotoInfo(id,secret, function(photoData){
+                getPhotoInfo(id,secret, photoUrl, photoUrlThumbNail, function(photoData, url1, url2){
                     if (photoData.photo.title._content !== ""){
                         title = photoData.photo.title._content;
                     }
                     if (photoData.photo.description._content !== ""){
                         description = photoData.photo.description._content;
                     }
-                    var outputObject = {
-                        thumbmail: photoUrlThumbNail,
-                        photoUrl : photoUrl,
+                     var outputObject = {
+                        thumbmail: url2,
+                        photoUrl : url1,
                         imageTitle: title,
                         imageDescription: description
                     };
                     array.push(outputObject);
+                    console.log(url2);
                 }).then(function(){
-                    setInterval(function(){
+                   setInterval(function(){
                         if (array.length === 10){
                             resolve(array);                
                         }
                     }, 500);
                 });
-                
             }
             
             
