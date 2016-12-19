@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "author": "shaw",
   "license": "ISC",
   "dependencies": {
@@ -10,8 +13,5 @@
     "mongodb": "^2.2.16",
     "request": "^2.79.0"
   }
-  "scripts": {
-    "start": "node index.js"
-  },
 }
 
