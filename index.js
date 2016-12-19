@@ -1,16 +1,16 @@
 var express = require("express");
 var request = require("request");
-var mongo = require('mongodb').MongoClient
+var mongo = require('mongodb').MongoClient;
 const mongodb_url = process.env.MONGOLAB_URI;
-const url = 'mongodb://localhost:27017/data';      
+//const url = 'mongodb://localhost:27017/data';      
 var app = express();
 
 
 
-const flickrApiKey="c527b6a065cf43ea5c5dcd76437e35fb";
+//const flickrApiKey="c527b6a065cf43ea5c5dcd76437e35fb";
 var flickrApiBaseUrl = "https://api.flickr.com/services/rest/?format=json&api_key=c527b6a065cf43ea5c5dcd76437e35fb&nojsoncallback=1&";
 var flickrMethod = "method=";
-var flickrName = "name=";
+//var flickrName = "name=";
 
 
 app.use(express.static('public'));
@@ -38,7 +38,7 @@ function storeData(val){
         db.close();
       }
     }); 
-};
+}
 
 function getData(callback){
   mongo.connect(mongodb_url,function (err, db){
@@ -52,14 +52,14 @@ function getData(callback){
         }).sort({when: -1}).limit(10).
         toArray(function (err,documents) {
             if (err) {
-                throw err // throw err causes the end It is a little like return console.log(err), except here I don't have the return
+                throw err; // throw err causes the end It is a little like return console.log(err), except here I don't have the return
             }    
-            callback(documents)
+            callback(documents);
           });
       }
       db.close();
   });  
-};
+}
 
 
 app.get('/latest', function(req, res) {
@@ -67,7 +67,7 @@ app.get('/latest', function(req, res) {
         res.send(callback);
         res.end();
     });
-})
+});
 
 
 function getPhotoInfo(photoIdVal, secretVal, callback){
@@ -109,13 +109,13 @@ app.get('/imagesearch',function(req,res, next){
     var insertObject = {
         term: text.substring(0, text.length-1),
         when: timeStamp
-    }
+    };
     
     var newRequest = new Promise(function(resolve,reject){
         var array = [];
         request.get(flickrApiBaseUrl+flickrMethod+method+flickrText+text+flickrSort+sort+flickrPerPage+perPage+flickrPage+page,function (error, response, data) {
           if (!error && response.statusCode == 200) {
-            var data = JSON.parse(data);
+            data = JSON.parse(data);
             //console.log(data.photos.pages);
             storeData(insertObject);
             for (var i=0; i<data.photos.photo.length; i++){
@@ -140,7 +140,7 @@ app.get('/imagesearch',function(req,res, next){
                         photoUrl : photoUrl,
                         imageTitle: title,
                         imageDescription: description
-                    }
+                    };
                     array.push(outputObject);
                 }).then(function(){
                     setInterval(function(){
@@ -157,12 +157,12 @@ app.get('/imagesearch',function(req,res, next){
               reject(console.log(error));
           }
         });    
-    })
+    });
     //console.log(flickrApiBaseUrl+flickrMethod+method+flickrText+text+flickrSort+sort+flickrPerPage+perPage+flickrPage+page);
     newRequest.then(function(array){
         res.send(array);   
         res.end();
-    })
+    });
     
 });
 
